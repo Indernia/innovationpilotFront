@@ -1,35 +1,71 @@
-import { Routes, Route, Link } from 'react-router-dom';
-import HomePage from './pages/Homepage';
+import { NavLink, Routes, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutUs';
 import ChatPage from './pages/AIChat';
+import flag from './assets/Innovationpilotflag.jpg';
 
 function App() {
   return (
-    <div style={{ fontFamily: 'sans-serif' }}>
-      <nav
-        style={{
-          padding: '1rem',
-          borderBottom: '1px solid #ccc',
-          marginBottom: '1rem',
-        }}
-      >
-        <Link to="/" style={{ marginRight: '1rem' }}>
-          Home
-        </Link>
-        <Link to="/about" style={{ marginRight: '1rem' }}>
-          About
-        </Link>
-        <Link to="/chat">
-          Chat
-        </Link>
-      </nav>
+    <div className="app-shell">
+      <header className="app-header">
 
-      <main style={{ padding: '1rem' }}>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/chat" element={<ChatPage />} />
-        </Routes>
+        {/* TITLE + FLAG */}
+        <div className="app-title">
+          <h1 className="title-text">
+            <img src={flag} alt="Flag" className="app-flag" />
+            Aquavate
+          </h1>
+          <span>Group 1 </span>
+        </div>
+
+        {/* NAVIGATION BAR */}
+        <nav className="app-nav">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              'nav-link' + (isActive ? ' nav-link-active' : '')
+            }
+          >
+            🏠 Home
+          </NavLink>
+
+          <NavLink
+            to="/chat"
+            className={({ isActive }) =>
+              'nav-link' + (isActive ? ' nav-link-active' : '')
+            }
+          >
+            💬 Chat
+          </NavLink>
+
+          <NavLink
+            to="/about"
+            className={({ isActive }) =>
+              'nav-link' + (isActive ? ' nav-link-active' : '')
+            }
+          >
+            🌿 About
+          </NavLink>
+        </nav>
+      </header>
+
+      {/* MAIN LAYOUT */}
+      <main className="app-main">
+        <section className="page-section">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/chat" element={<ChatPage />} />
+            <Route path="/about" element={<AboutPage />} />
+          </Routes>
+        </section>
+
+        <aside className="sidebar-card">
+          <p>👮 Little reminder:</p>
+          <p>Please don't share any personal info in this chat. Stay safe.</p>
+          <div className="sidebar-chip-row">
+            <span className="sidebar-chip">🤖 o3-mini is used</span>
+          </div>
+        </aside>
       </main>
     </div>
   );
