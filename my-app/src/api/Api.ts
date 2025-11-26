@@ -1,8 +1,6 @@
-// src/api/waterTowerApi.ts
-
 export interface WaterTowerReply {
   reply: string;
-  steps: string[];     // 👈 add steps to the type
+  steps: string[];
 }
 
 export async function sendWaterTowerQuestion(
@@ -22,25 +20,25 @@ export async function sendWaterTowerQuestion(
   }
 
   const data: any = await response.json();
-  console.log('RAW WATER TOWER RESPONSE', data);
+  console.log("RAW WATER TOWER RESPONSE", data);
 
   const messages = Array.isArray(data.text) ? data.text : [];
 
-  // final reply = last AI message
+  // Get last AI message
   const lastAi = [...messages]
     .reverse()
-    .find((m: any) => m?.type === 'ai' && typeof m.content === 'string');
+    .find((m: any) => m.type === 'ai' && typeof m.content === 'string');
 
-  const reply =
-    lastAi?.content ?? 'No AI message found in API response 🤔';
+  const reply = lastAi?.content ?? "No AI message returned 🤔";
 
-  // steps for accordion (you can tweak this)
+  // TOOL STEPS ONLY
   const steps: string[] = messages
-    .filter((m: any) => typeof m.content === 'string' && m.content.trim())
-    .map(
-      (m: any, idx: number) =>
-        `Step ${idx + 1}: [${m.type ?? 'unknown'}] ${m.content}`
-    );
+    .filter((m: any) => m.type === 'tool')
+    .map((m: any, idx: number) => {
+      const name = m.tool_name ?? "Unknown tool";
+      const args = JSON.stringify(m.content, null, 2);
+      return `Tool step ${idx + 1}: ${name}\n${args}`;
+    });
 
-  return { reply, steps };   // 👈 now we really return steps
+  return { reply, steps };
 }
