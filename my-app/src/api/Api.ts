@@ -14,9 +14,7 @@ export async function sendWaterTowerQuestion(
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        text: message,
-      }),
+      body: JSON.stringify({ text: message }),
     }
   );
 
@@ -25,20 +23,19 @@ export async function sendWaterTowerQuestion(
   }
 
   const data: any = await response.json();
-  console.log('Water tower API raw response:', data);
+  console.log('RAW WATER TOWER RESPONSE', data);
 
-  // Get the last non-empty string "content" from data.text[]
-  const texts = Array.isArray(data.text) ? data.text : [];
-  const lastWithContent = [...texts]
+  // data.text is an array of messages like the ones in your screenshot.
+  const messages = Array.isArray(data.text) ? data.text : [];
+
+  // Take the LAST message whose type is "ai" (assistant answer).
+  const lastAi = [...messages]
     .reverse()
-    .find(
-      (m: any) =>
-        typeof m?.content === 'string' && m.content.trim().length > 0
-    );
+    .find((m: any) => m?.type === 'ai' && typeof m.content === 'string');
 
   const reply =
-    lastWithContent?.content ??
-    'No message returned from water-tower helper 🤔';
+    lastAi?.content ??
+    'No AI message found in API response 🤔';
 
   return { reply };
 }
