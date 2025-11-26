@@ -1,6 +1,5 @@
 import { type FormEvent, useState } from 'react';
-
-import { sendWaterTowerQuestion } from '../api/Api'; // ⬅️ make sure this file returns { reply, steps }
+import { sendWaterTowerQuestion } from '../api/Api'; // must return { reply, steps }
 
 type Sender = 'user' | 'helper';
 
@@ -20,6 +19,7 @@ function ChatPage() {
       text: "👋 Hi! Ask me anything about water towers in Sierra Leone - I'll use our WhatsApp integration to help.",
     },
   ]);
+
   const [input, setInput] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -39,6 +39,7 @@ function ChatPage() {
       from: 'user',
       text: trimmed,
     };
+
     setMessages((prev) => [...prev, userMessage]);
     setInput('');
     setIsSending(true);
@@ -81,73 +82,76 @@ function ChatPage() {
           marginBottom: '1rem',
         }}
       >
-        {/* Single main column for now */}
+        {/* main column */}
         <div style={{ flex: 1 }}>
-          {/* ---------- TOOL STEPS ACCORDION ABOVE CHAT ---------- */}
-          {lastSteps && lastSteps.length > 0 && (
-            <div
-              style={{
-                marginBottom: '1rem',
-                borderRadius: '14px',
-                overflow: 'hidden',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.06)',
-                background: 'rgba(255,255,255,0.85)',
-              }}
-            >
-              {/* Header */}
-              <button
-                type="button"
-                onClick={() => setIsStepsOpen((prev) => !prev)}
-                style={{
-                  width: '100%',
-                  padding: '0.7rem 1rem',
-                  border: 'none',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  background: 'transparent',
-                  cursor: 'pointer',
-                  fontSize: '0.9rem',
-                  fontWeight: 600,
-                }}
-              >
-                <span>AI tool steps</span>
-                <span>{isStepsOpen ? '▴' : '▾'}</span>
-              </button>
-
-              {/* Body */}
-              {isStepsOpen && (
-                <div
-                  style={{
-                    borderTop: '1px solid rgba(0,0,0,0.08)',
-                    padding: '0.7rem 1rem',
-                  }}
-                >
-                  <ol style={{ margin: 0, paddingLeft: '1.1rem' }}>
-                    {lastSteps.map((step, i) => (
-                      <li key={i} style={{ marginBottom: '0.3rem' }}>
-                        {step}
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* ---------- CHAT BUBBLES BELOW THE ACCORDION ---------- */}
+          {/* Chat Bubbles */}
           <div className="chat-bubbles">
             {messages.map((m) => (
               <div
                 key={m.id}
                 className={
                   'chat-bubble ' +
-                  (m.from === 'user' ? 'chat-bubble-you' : 'chat-bubble-them')
+                  (m.from === 'user'
+                    ? 'chat-bubble-you'
+                    : 'chat-bubble-them')
                 }
               >
                 {m.text}
               </div>
             ))}
+
+            {/* AI TOOL STEPS directly after latest helper message */}
+            {lastSteps &&
+              lastSteps.length > 0 &&
+              messages[messages.length - 1]?.from === 'helper' && (
+                <div
+                  style={{
+                    marginTop: '0.75rem',
+                    marginBottom: '0.75rem',
+                    borderRadius: '14px',
+                    overflow: 'hidden',
+                    boxShadow: '0 2px 6px rgba(0,0,0,0.06)',
+                    background: 'rgba(255,255,255,0.85)',
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setIsStepsOpen((prev) => !prev)}
+                    style={{
+                      width: '100%',
+                      padding: '0.7rem 1rem',
+                      border: 'none',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      background: 'transparent',
+                      cursor: 'pointer',
+                      fontSize: '0.9rem',
+                      fontWeight: 600,
+                    }}
+                  >
+                    <span>AI tool steps</span>
+                    <span>{isStepsOpen ? '▴' : '▾'}</span>
+                  </button>
+
+                  {isStepsOpen && (
+                    <div
+                      style={{
+                        borderTop: '1px solid rgba(0,0,0,0.08)',
+                        padding: '0.7rem 1rem',
+                      }}
+                    >
+                      <ol style={{ margin: 0, paddingLeft: '1.1rem' }}>
+                        {lastSteps.map((step, i) => (
+                          <li key={i} style={{ marginBottom: '0.3rem' }}>
+                            {step}
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                  )}
+                </div>
+              )}
 
             {isSending && (
               <div className="chat-bubble chat-bubble-them">
@@ -156,11 +160,9 @@ function ChatPage() {
             )}
           </div>
         </div>
-
-        {/* optional right column for future content */}
-        {/* <div style={{ flex: 1 }}>…</div> */}
       </div>
 
+      {/* Input form */}
       <form onSubmit={handleSubmit}>
         <div
           style={{
@@ -199,10 +201,9 @@ function ChatPage() {
             {isSending ? 'Sending…' : 'Send'}
           </button>
         </div>
+
         {error && (
-          <div style={{ fontSize: '0.85rem', color: '#c0392b' }}>
-            {error}
-          </div>
+          <div style={{ fontSize: '0.85rem', color: '#c0392b' }}>{error}</div>
         )}
         {!error && (
           <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>
