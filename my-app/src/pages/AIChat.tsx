@@ -1,5 +1,5 @@
 import { type FormEvent, useState } from 'react';
-import { sendWaterTowerQuestion } from '../api/Api'; // must return { reply, steps }
+import { sendWaterTowerQuestion } from '../api/Api';
 
 type Sender = 'user' | 'helper';
 
@@ -74,91 +74,78 @@ function ChatPage() {
         field in Sierra Leone.
       </p>
 
-      <div
-        style={{
-          display: 'flex',
-          gap: '1.5rem',
-          alignItems: 'flex-start',
-          marginBottom: '1rem',
-        }}
-      >
-        {/* main column */}
-        <div style={{ flex: 1 }}>
-          {/* Chat Bubbles */}
-          <div className="chat-bubbles">
-            {messages.map((m) => (
-              <div
-                key={m.id}
-                className={
-                  'chat-bubble ' +
-                  (m.from === 'user'
-                    ? 'chat-bubble-you'
-                    : 'chat-bubble-them')
-                }
-              >
-                {m.text}
-              </div>
-            ))}
+      {/* >>> TOOL STEPS GO HERE <<< */}
+      {lastSteps && lastSteps.length > 0 && (
+        <div
+          style={{
+            margin: '1rem 0',
+            borderRadius: '14px',
+            overflow: 'hidden',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.06)',
+            background: 'rgba(255,255,255,0.85)',
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setIsStepsOpen((prev) => !prev)}
+            style={{
+              width: '100%',
+              padding: '0.7rem 1rem',
+              border: 'none',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              background: 'transparent',
+              cursor: 'pointer',
+              fontSize: '0.9rem',
+              fontWeight: 600,
+            }}
+          >
+            <span>AI tool steps</span>
+            <span>{isStepsOpen ? '▴' : '▾'}</span>
+          </button>
 
-            {/* AI TOOL STEPS directly after latest helper message */}
-            {lastSteps &&
-              lastSteps.length > 0 &&
-              messages[messages.length - 1]?.from === 'helper' && (
-                <div
-                  style={{
-                    marginTop: '0.75rem',
-                    marginBottom: '0.75rem',
-                    borderRadius: '14px',
-                    overflow: 'hidden',
-                    boxShadow: '0 2px 6px rgba(0,0,0,0.06)',
-                    background: 'rgba(255,255,255,0.85)',
-                  }}
-                >
-                  <button
-                    type="button"
-                    onClick={() => setIsStepsOpen((prev) => !prev)}
-                    style={{
-                      width: '100%',
-                      padding: '0.7rem 1rem',
-                      border: 'none',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      background: 'transparent',
-                      cursor: 'pointer',
-                      fontSize: '0.9rem',
-                      fontWeight: 600,
-                    }}
-                  >
-                    <span>AI tool steps</span>
-                    <span>{isStepsOpen ? '▴' : '▾'}</span>
-                  </button>
+          {isStepsOpen && (
+            <div
+              style={{
+                borderTop: '1px solid rgba(0,0,0,0.08)',
+                padding: '0.7rem 1rem',
+              }}
+            >
+              <ol style={{ margin: 0, paddingLeft: '1.1rem' }}>
+                {lastSteps.map((step, i) => (
+                  <li key={i} style={{ marginBottom: '0.3rem' }}>
+                    {step}
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
+        </div>
+      )}
 
-                  {isStepsOpen && (
-                    <div
-                      style={{
-                        borderTop: '1px solid rgba(0,0,0,0.08)',
-                        padding: '0.7rem 1rem',
-                      }}
-                    >
-                      <ol style={{ margin: 0, paddingLeft: '1.1rem' }}>
-                        {lastSteps.map((step, i) => (
-                          <li key={i} style={{ marginBottom: '0.3rem' }}>
-                            {step}
-                          </li>
-                        ))}
-                      </ol>
-                    </div>
-                  )}
-                </div>
-              )}
+      {/* Chat container */}
+      <div style={{ marginBottom: '1rem' }}>
+        <div className="chat-bubbles">
+          {messages.map((m) => (
+            <div
+              key={m.id}
+              className={
+                'chat-bubble ' +
+                (m.from === 'user'
+                  ? 'chat-bubble-you'
+                  : 'chat-bubble-them')
+              }
+            >
+              {m.text}
+            </div>
+          ))}
 
-            {isSending && (
-              <div className="chat-bubble chat-bubble-them">
-                🌍 Checking with the team in Sierra Leone…
-              </div>
-            )}
-          </div>
+          {isSending && (
+            <div className="chat-bubble chat-bubble-them">
+              🌍 Checking with the team in Sierra Leone…
+            </div>
+          )}
         </div>
       </div>
 
