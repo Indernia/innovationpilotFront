@@ -61,7 +61,7 @@ function App() {
           <p>👮 Little reminder:</p>
           <p>Please don't share any personal info in this chat. Stay safe.</p>
           <div className="sidebar-chip-row">
-            <span className="sidebar-chip">🤖 o3-mini is used</span>
+            <span className="sidebar-chip">🤖 GPT-4o is used</span>
           </div>
         </aside>
       </main>

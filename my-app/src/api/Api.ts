@@ -2,34 +2,43 @@
 
 export interface WaterTowerReply {
   reply: string;
-  // add more fields if your API returns them (e.g. towerId, riskScore, etc.)
 }
 
 export async function sendWaterTowerQuestion(
   message: string
 ): Promise<WaterTowerReply> {
-  
-  const response = await fetch('https://innovationpilot-hafugqdfbzdyaecn.northeurope-01.azurewebsites.net/message/full', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      // add auth headers here if needed
-      // 'Authorization': 'Bearer YOUR_TOKEN',
-    },
-    body: JSON.stringify({
-      text: message,
-      // include anything your API needs:
-      // userId, towerId, location, etc.
-    }),
-  });
+  const response = await fetch(
+    'https://innovationpilot-hafugqdfbzdyaecn.northeurope-01.azurewebsites.net/message/full',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        text: message,
+      }),
+    }
+  );
 
   if (!response.ok) {
     throw new Error(`API error: ${response.status}`);
   }
 
-  const data = await response.json();
+  const data: any = await response.json();
+  console.log('Water tower API raw response:', data);
 
-  return {
-    reply: data.reply ?? 'No reply field in API response 🤔',
-  };
+  // Get the last non-empty string "content" from data.text[]
+  const texts = Array.isArray(data.text) ? data.text : [];
+  const lastWithContent = [...texts]
+    .reverse()
+    .find(
+      (m: any) =>
+        typeof m?.content === 'string' && m.content.trim().length > 0
+    );
+
+  const reply =
+    lastWithContent?.content ??
+    'No message returned from water-tower helper 🤔';
+
+  return { reply };
 }

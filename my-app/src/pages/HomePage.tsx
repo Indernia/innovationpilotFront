@@ -3,7 +3,7 @@ function HomePage() {
     <div>
       <h2 className="page-title">Welcome to Aquavate</h2>
       <p className="page-subtitle">
-        A gentle little chat space designed with soft colors and friendly vibes.
+        An AI helper for water towers in Sierra Leone.
       </p>
       <p>
         Use the navigation above to wander between pages. The <strong>Chat</strong>{' '}
@@ -11,7 +11,7 @@ function HomePage() {
         page can explain your group project, tech choices, and goals.
       </p>
       <p>
-        Jeg er så lækker, cmon now dog.
+        This is a demo app built during the Innovation Pilot course by Group 1.
       </p>
     </div>
   );
