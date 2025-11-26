@@ -1,6 +1,6 @@
 import { type FormEvent, useState } from 'react';
 
-import { sendWaterTowerQuestion } from '../api/Api';
+import { sendWaterTowerQuestion } from '../api/Api'; // ⬅️ make sure this file returns { reply, steps }
 
 type Sender = 'user' | 'helper';
 
@@ -53,8 +53,8 @@ function ChatPage() {
       };
 
       setMessages((prev) => [...prev, helperMessage]);
-      setLastSteps(result.steps ?? []); // only tool steps from API
-      setIsStepsOpen(true);             // open accordion on new answer
+      setLastSteps(result.steps ?? []);
+      setIsStepsOpen(true);
     } catch (err) {
       console.error(err);
       setError(
@@ -81,6 +81,7 @@ function ChatPage() {
           marginBottom: '1rem',
         }}
       >
+        {/* Single main column for now */}
         <div style={{ flex: 1 }}>
           {/* ---------- TOOL STEPS ACCORDION ABOVE CHAT ---------- */}
           {lastSteps && lastSteps.length > 0 && (
@@ -125,16 +126,7 @@ function ChatPage() {
                   <ol style={{ margin: 0, paddingLeft: '1.1rem' }}>
                     {lastSteps.map((step, i) => (
                       <li key={i} style={{ marginBottom: '0.3rem' }}>
-                        <pre
-                          style={{
-                            margin: 0,
-                            whiteSpace: 'pre-wrap',
-                            fontFamily: 'inherit',
-                            fontSize: '0.82rem',
-                          }}
-                        >
-                          {step}
-                        </pre>
+                        {step}
                       </li>
                     ))}
                   </ol>
@@ -164,6 +156,9 @@ function ChatPage() {
             )}
           </div>
         </div>
+
+        {/* optional right column for future content */}
+        {/* <div style={{ flex: 1 }}>…</div> */}
       </div>
 
       <form onSubmit={handleSubmit}>
@@ -205,7 +200,9 @@ function ChatPage() {
           </button>
         </div>
         {error && (
-          <div style={{ fontSize: '0.85rem', color: '#c0392b' }}>{error}</div>
+          <div style={{ fontSize: '0.85rem', color: '#c0392b' }}>
+            {error}
+          </div>
         )}
         {!error && (
           <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>
