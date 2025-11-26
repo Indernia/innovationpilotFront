@@ -9,7 +9,7 @@ export async function sendWaterTowerQuestion(
   message: string
 ): Promise<WaterTowerReply> {
   
-  const response = await fetch('https://innovationpilot-hafugqdfbzdyaecn.northeurope-01.azurewebsites.net/messages/full', {
+  const response = await fetch('https://innovationpilot-hafugqdfbzdyaecn.northeurope-01.azurewebsites.net/message/full', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
