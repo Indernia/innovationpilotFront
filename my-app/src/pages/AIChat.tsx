@@ -1,4 +1,4 @@
-import {type FormEvent, useState } from 'react';
+import { type FormEvent, useState } from 'react';
 
 import { sendWaterTowerQuestion } from '../api/Api';
 
@@ -17,12 +17,13 @@ function ChatPage() {
     {
       id: messageIdCounter++,
       from: 'helper',
-      text: '👋 Hi! Ask me anything about water towers in Sierra Leone - I\'ll use our WhatsApp integration to help.',
+      text: "👋 Hi! Ask me anything about water towers in Sierra Leone - I'll use our WhatsApp integration to help.",
     },
   ]);
   const [input, setInput] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
   const [lastSteps, setLastSteps] = useState<string[] | null>(null);
   const [isStepsOpen, setIsStepsOpen] = useState(false);
 
@@ -52,8 +53,8 @@ function ChatPage() {
       };
 
       setMessages((prev) => [...prev, helperMessage]);
-      setLastSteps(result.steps ?? []);
-      setIsStepsOpen(true);
+      setLastSteps(result.steps ?? []); // only tool steps from API
+      setIsStepsOpen(true);             // open accordion on new answer
     } catch (err) {
       console.error(err);
       setError(
@@ -71,6 +72,7 @@ function ChatPage() {
         Ask a question and we’ll reach out through WhatsApp to get info from the
         field in Sierra Leone.
       </p>
+
       <div
         style={{
           display: 'flex',
@@ -80,6 +82,68 @@ function ChatPage() {
         }}
       >
         <div style={{ flex: 1 }}>
+          {/* ---------- TOOL STEPS ACCORDION ABOVE CHAT ---------- */}
+          {lastSteps && lastSteps.length > 0 && (
+            <div
+              style={{
+                marginBottom: '1rem',
+                borderRadius: '14px',
+                overflow: 'hidden',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.06)',
+                background: 'rgba(255,255,255,0.85)',
+              }}
+            >
+              {/* Header */}
+              <button
+                type="button"
+                onClick={() => setIsStepsOpen((prev) => !prev)}
+                style={{
+                  width: '100%',
+                  padding: '0.7rem 1rem',
+                  border: 'none',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  background: 'transparent',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                }}
+              >
+                <span>AI tool steps</span>
+                <span>{isStepsOpen ? '▴' : '▾'}</span>
+              </button>
+
+              {/* Body */}
+              {isStepsOpen && (
+                <div
+                  style={{
+                    borderTop: '1px solid rgba(0,0,0,0.08)',
+                    padding: '0.7rem 1rem',
+                  }}
+                >
+                  <ol style={{ margin: 0, paddingLeft: '1.1rem' }}>
+                    {lastSteps.map((step, i) => (
+                      <li key={i} style={{ marginBottom: '0.3rem' }}>
+                        <pre
+                          style={{
+                            margin: 0,
+                            whiteSpace: 'pre-wrap',
+                            fontFamily: 'inherit',
+                            fontSize: '0.82rem',
+                          }}
+                        >
+                          {step}
+                        </pre>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ---------- CHAT BUBBLES BELOW THE ACCORDION ---------- */}
           <div className="chat-bubbles">
             {messages.map((m) => (
               <div
@@ -100,7 +164,6 @@ function ChatPage() {
             )}
           </div>
         </div>
-
       </div>
 
       <form onSubmit={handleSubmit}>
