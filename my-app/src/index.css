@@ -213,7 +213,7 @@ body {
     flex-wrap: wrap;
   }
   .app-flag {
-  width: 46px;
+  width: 5px;
   height: auto;
   border-radius: 6px;
   object-fit: cover;

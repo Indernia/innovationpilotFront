@@ -1,6 +1,5 @@
 import {type FormEvent, useState } from 'react';
 
-import flag from '../assets/Innovationpilotflag.jpg';
 import { sendWaterTowerQuestion } from '../api/Api';
 
 type Sender = 'user' | 'helper';
@@ -18,7 +17,7 @@ function ChatPage() {
     {
       id: messageIdCounter++,
       from: 'helper',
-      text: '👋 Hi! Ask me anything about water towers in Sierra Leone – I’ll use our WhatsApp integration to help.',
+      text: '👋 Hi! Ask me anything about water towers in Sierra Leone - I\'ll use our WhatsApp integration to help.',
     },
   ]);
   const [input, setInput] = useState('');
@@ -43,7 +42,6 @@ function ChatPage() {
     setIsSending(true);
 
     try {
-      // 🔗 Call your backend API (which talks to WhatsApp)
       const result = await sendWaterTowerQuestion(trimmed);
 
       const helperMessage: ChatMessage = {
@@ -101,17 +99,7 @@ function ChatPage() {
           </div>
         </div>
 
-        <div style={{ flexShrink: 0 }}>
-          <img
-            src={flag}
-            alt="Flag"
-            style={{
-              width: '180px',
-              borderRadius: '18px',
-              boxShadow: '0 10px 25px rgba(0,0,0,0.18)',
-            }}
-          />
-        </div>
+        
       </div>
 
       <form onSubmit={handleSubmit}>

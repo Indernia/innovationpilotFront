@@ -8,8 +8,8 @@ export interface WaterTowerReply {
 export async function sendWaterTowerQuestion(
   message: string
 ): Promise<WaterTowerReply> {
-  // TODO: replace this with your real backend URL
-  const response = await fetch('https://innovationpilot-hafugqdfbzdyaecn.northeurope-01.azurewebsites.net', {
+  
+  const response = await fetch('https://innovationpilot-hafugqdfbzdyaecn.northeurope-01.azurewebsites.net/messages/full', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -29,7 +29,6 @@ export async function sendWaterTowerQuestion(
 
   const data = await response.json();
 
-  // Adjust this mapping to match your actual API response
   return {
     reply: data.reply ?? 'No reply field in API response 🤔',
   };

@@ -2,7 +2,6 @@ import { NavLink, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutUs';
 import ChatPage from './pages/AIChat';
-import flag from './assets/Innovationpilotflag.jpg';
 
 function App() {
   return (
@@ -12,7 +11,6 @@ function App() {
         {/* TITLE + FLAG */}
         <div className="app-title">
           <h1 className="title-text">
-            <img src={flag} alt="Flag" className="app-flag" />
             Aquavate
           </h1>
           <span>Group 1 </span>
