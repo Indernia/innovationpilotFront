@@ -23,6 +23,8 @@ function ChatPage() {
   const [input, setInput] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [lastSteps, setLastSteps] = useState<string[] | null>(null);
+  const [isStepsOpen, setIsStepsOpen] = useState(false);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -51,6 +53,8 @@ function ChatPage() {
       };
 
       setMessages((prev) => [...prev, helperMessage]);
+      setLastSteps(result.steps ?? []);
+      setIsStepsOpen(true);
     } catch (err) {
       console.error(err);
       setError(
@@ -98,6 +102,58 @@ function ChatPage() {
             )}
           </div>
         </div>
+{lastSteps && lastSteps.length > 0 && (
+  <div
+    style={{
+      marginTop: '0.75rem',
+      marginBottom: '0.75rem',
+      borderRadius: '14px',
+      overflow: 'hidden',
+      boxShadow: '0 2px 6px rgba(0,0,0,0.06)',
+      background: 'rgba(255,255,255,0.85)',
+    }}
+  >
+    {/* Accordion header */}
+    <button
+      type="button"
+      onClick={() => setIsStepsOpen((open) => !open)}
+      style={{
+        width: '100%',
+        padding: '0.6rem 0.9rem',
+        border: 'none',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        background: 'transparent',
+        cursor: 'pointer',
+        fontSize: '0.9rem',
+        fontWeight: 600,
+      }}
+    >
+      <span>See how the AI answered this</span>
+      <span style={{ fontSize: '1rem' }}>{isStepsOpen ? '▴' : '▾'}</span>
+    </button>
+
+    {/* Accordion body */}
+    {isStepsOpen && (
+      <div
+        style={{
+          borderTop: '1px solid rgba(0,0,0,0.06)',
+          padding: '0.6rem 0.9rem 0.7rem',
+          fontSize: '0.85rem',
+        }}
+      >
+        <ol style={{ paddingLeft: '1.2rem', margin: 0 }}>
+          {lastSteps.map((step, i) => (
+            <li key={i} style={{ marginBottom: '0.25rem' }}>
+              {step}
+            </li>
+          ))}
+        </ol>
+      </div>
+    )}
+  </div>
+)}
 
         
       </div>

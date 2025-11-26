@@ -2,6 +2,7 @@
 
 export interface WaterTowerReply {
   reply: string;
+  steps: string[];     // 👈 add steps to the type
 }
 
 export async function sendWaterTowerQuestion(
@@ -11,9 +12,7 @@ export async function sendWaterTowerQuestion(
     'https://innovationpilot-hafugqdfbzdyaecn.northeurope-01.azurewebsites.net/message/full',
     {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text: message }),
     }
   );
@@ -25,17 +24,23 @@ export async function sendWaterTowerQuestion(
   const data: any = await response.json();
   console.log('RAW WATER TOWER RESPONSE', data);
 
-  // data.text is an array of messages like the ones in your screenshot.
   const messages = Array.isArray(data.text) ? data.text : [];
 
-  // Take the LAST message whose type is "ai" (assistant answer).
+  // final reply = last AI message
   const lastAi = [...messages]
     .reverse()
     .find((m: any) => m?.type === 'ai' && typeof m.content === 'string');
 
   const reply =
-    lastAi?.content ??
-    'No AI message found in API response 🤔';
+    lastAi?.content ?? 'No AI message found in API response 🤔';
 
-  return { reply };
+  // steps for accordion (you can tweak this)
+  const steps: string[] = messages
+    .filter((m: any) => typeof m.content === 'string' && m.content.trim())
+    .map(
+      (m: any, idx: number) =>
+        `Step ${idx + 1}: [${m.type ?? 'unknown'}] ${m.content}`
+    );
+
+  return { reply, steps };   // 👈 now we really return steps
 }
